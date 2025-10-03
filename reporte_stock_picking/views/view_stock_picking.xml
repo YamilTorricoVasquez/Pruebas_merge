@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vista de lista personalizada -->
+    <record id="view_stock_picking_custom_list" model="ir.ui.view">
+        <field name="name">stock.picking.custom.list</field>
+        <field name="model">stock.picking</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="saleOrder"/>
+                <field name="secuencia"/>
+                <field name="mes"/>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="scheduled_date"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+    <!-- Acción para abrir la vista -->
+    <record id="action_stock_picking_custom" model="ir.actions.act_window">
+        <field name="name">Movimientos de Almacén</field>
+        <field name="res_model">stock.picking</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('secuencia', '!=', ''),('saleOrder','!=','')]</field>
+        <field name="view_id" ref="view_stock_picking_custom_list"/>
+    </record>
+    <!-- Menú dentro de "Informes" de Ventas -->
+    <menuitem id="menu_stock_picking_custom"
+              name="Movimientos"
+              parent="sale.menu_sale_report"
+              action="action_stock_picking_custom"
+              sequence="50"/>
+</odoo>

@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="cuerpo_pdf_nota_venta" >
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="reporte_nota_venta.cabecera_pdf_nota_venta">
+                    <div class="page" >
+                        <!--style="height: 40px !important;"  border-top: 0px; font-size: 11px; margin-top: 1px; -->
+                        <div class="row">
+                            <div class="col-12">
+                                <!-- class="table table-bordered" -->
+                                <table style="width:100%; font-size: 13px !important; font-family: 'Arial'; border-collapse: collapse;">
+                                    <thead>
+                                        <tr style="border: 0px solid black;">
+                                            <th style="border: 0px solid black; padding:2px;" >ITEM</th>
+                                            <th style="border: 0px solid black;padding:2px;">DESCRIPCION ITEM</th>
+                                            <th style="border: 0px solid black;padding:2px;" >UNI</th>
+                                            <th style="border: 0px solid black;padding:2px;" >CANTIDAD</th>
+                                            <th style="border: 0px solid black;padding:2px;" >P.U. List</th>
+                                            <!-- <th style="border: 0px solid black;padding:2px;" width="20">Dscto
+                                                 <t t-esc="o.company_id.currency_id.symbol"/> 
+                                            </th> -->
+                                            <th style="border: 0px solid black;padding:2px;" >P.UNIT</th>
+                                            <th style="border: 0px solid black;padding:2px;">IMPORTE
+                                                <!-- <t t-esc="o.company_id.currency_id.symbol"/> -->
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="account_account_tbody">
+                                        <t t-set="sum_total" t-value="0.0"/>
+                                        <t t-foreach="o.move_ids" t-as="move">
+                                            <t t-set="sum_total" t-value="sum_total + (move.sale_line_id.price_unit * move.quantity)"/>
+                                            <tr style="border: none;">
+                                                <!--.default_code or ''-->
+                                                <td class="text-center" style="border: none;padding:2px;">
+                                                    <span t-esc="move.product_id.default_code"/>
+                                                </td>
+                                                <td class="text-center" style="border: none;padding:2px;">
+                                                    <span t-esc="move.product_id.name"/>
+                                                </td>
+                                                <!--Unidad de medida-->
+                                                <!-- <td class="text-center" style="border: none;padding:2px;">
+                                                    <span t-esc="move.sale_line_id.secondary_uom.name"/>
+                                                </td> -->
+                                                <td class="text-center" style="border: none;padding:2px;">
+                                                    <span t-esc="move.product_uom.name"/>
+                                                </td>
+                                                <!-- <td class="text-right" style="border: none;padding:2px;">
+                                                    <span t-esc="move.secondary_done" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/>
+                                                </td> -->
+                                                <td class="text-right" style="border: none;padding:2px;text-align: center;">
+                                                    <span t-esc="move.quantity" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/>
+                                                </td>
+                                                <td class="text-center" style="border: none;padding:2px;">
+                                                    <span t-esc="move.sale_line_id.price_unit" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/>
+                                                </td>
+                                                <!-- <td class="text-center" style="border: none;padding:2px;">
+                                                    <span t-esc="move.sale_line_id.discount" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/>
+                                                </td> -->
+                                                <td class="text-center" style="border: none;padding:2px;">
+                                                    <span t-esc="move.sale_line_id.price_unit" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/>
+                                                </td>
+                                                <td class="text-center" style="border: none;padding:2px;">
+                                                    <span t-esc="move.sale_line_id.price_unit * move.quantity " t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                        <!-- Totales -->
+                                        <tr>
+                                            <td colspan="5" style="text-align: start; padding:2px;">
+                                                <t t-set="num2word_var" t-value="o.number_to_word(sum_total).upper()"/>
+                                                <t t-if="sum_total % 1 == 0">
+                                                    <t t-set="num2word_var" t-value="num2word_var.replace('CON 0/100', 'CON 00/100')"/></t>
+                                                <span style="font-size: 13px;font-family: 'Roboto';">LA SUMA DE:
+                                                    <t t-out="num2word_var"/>
+                                                </span>
+                                            </td>
+                                            <td colspan="1" style="text-align: right; padding:2px;">
+                                                <strong>TOTALES</strong>
+                                            </td>
+                                            <td class="text-right" style="padding:2px;text-align: center;">
+                                                <strong>
+                                                    <span t-esc="sum_total" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/>
+                                                </strong>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- <div class="row" style="margin-top: 10px;">
+                            <div class="col-12">
+                                <t t-set="num2word_var" t-value="o.number_to_word(sum_total).upper()"/>
+                                <t t-if="sum_total % 1 == 0">
+                                    <t t-set="num2word_var" t-value="num2word_var.replace('CON 0/100', 'CON 00/100')"/>
+                                </t>
+                                <span style="font-size: 8px;font-family: 'Roboto';">LA SUMA DE:
+                                    <t t-out="num2word_var"/>
+                                </span>
+                            </div>
+                        </div> -->
+                        <t t-set="current_page" t-value="context.get('page_number', 1)"/>
+                        <t t-set="total_pages" t-value="len(o)"/>
+                        <div class="row" style="margin: 20px 25px 0 25px;">
+                            <table style="width: 100%; border-collapse: separate; border-spacing: 10px; font-size: 13px; text-align: center;">
+                                <!-- <tr>
+                                    <td style="height: 70px; width: 25%; vertical-align: bottom; border: 1px solid black; border-radius: 5px;"></td>
+                                    <td style="height: 70px; width: 25%; vertical-align: bottom; border: 1px solid black; border-radius: 5px;"></td>
+                                    <td style="height: 70px; width: 25%; vertical-align: bottom; border: 1px solid black; border-radius: 5px;"></td>
+                                    <td style="height: 70px; width: 25%; vertical-align: bottom; border: 1px solid black; border-radius: 5px;"></td>
+                                </tr> -->
+                                <tr>
+                                    <td>
+                                        ------------------------
+                                    </td>
+                                    <td>
+                                        ------------------------
+                                    </td>
+                                    <td>
+                                        ------------------------
+                                    </td>
+                                    <td>
+                                        ------------------------
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Entregado
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                        Nombre: .....................................
+                                    </td>
+                                    <td>
+                                        Autorizado
+                                        <br/>
+                                        <br/>
+                                        <br/> 
+                                        Nombre: .....................................
+                                    </td>
+                                    <td>
+                                        Transporte
+                                        <br/>
+                                        <br/>
+                                        <br/> 
+                                        Nombre: .....................................
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                        Placa: ......................................
+                                    </td>
+                                    <td>
+                                        Recibido
+                                        <br/>
+                                        <br/>
+                                        <br/> 
+                                        Nombre: .....................................
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="cabecera_pdf_nota_venta">
+            <t t-if="not o" t-set="o" t-value="doc" />
+            <t t-if="not company">
+                <t t-if="company_id">
+                    <t t-set="company" t-value="company_id" />
+                </t>
+                <t t-elif="o and 'company_id' in o">
+                    <t t-set="company" t-value="o.company_id.sudo()" />
+                </t>
+                <t t-else="else">
+                    <t t-set="company" t-value="res_company" />
+                </t>
+            </t>
+            <!-- HEADER -->
+            <div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style">
+                <!--Para eiliminar bordes de la tabla border: 0px solid #fff;  border-spacing: 0px;-->
+                <style type="text/css">
+                    table {
+                        border-spacing: 0px;
+                        border: 0px solid #fff;
+                    }
+                </style>
+                <!--La parte superior de la cabecera-->
+                <!-- <table style="width:100%; text-align:center; margin-bottom:5px;font-family: 'Arial';">
+                    <tr>
+                        <td colspan="4" style="text-align: center; font-size:13px;">
+                            <strong t-field="company.name"/>
+                        </td>
+                    </tr>
+                </table> -->
+                <table style="width:100%; text-align:center; margin-bottom:5px;font-family: 'Arial';">
+                    <tr>
+                        <td colspan="4" style="text-align: center; font-size:13px;">
+                            <strong t-field="company.name"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center;  width: 25%;">
+                            <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" alt="Logo" style="height: 50px; width: 150px;"/>
+                        </td>
+                        <td style="text-align: center; font-size:18px; width: 50%;">
+                            <strong>NOTA DE VENTA
+                                <t t-esc="o.codigo_A1_or_A2"/>
+-NV<t t-esc="o.mes_secuencia"/>
+                            </strong>
+                        </td>
+                        <td style="text-align: center; font-size:18px;width: 25%;">
+
+                        </td>
+                    </tr>
+                </table>
+                <!--La parte inferior de la cabecera-->
+                <table border="1" style="width:100%; border-collapse: collapse; font-size: 13px;font-family: 'Arial';">
+                    <tr>
+                        <td style="width: 100%; vertical-align: top; style=text-align: end;">
+                            <!-- Primera columna -->
+                            <table border="1" style="width: 100%; ">
+
+                                <tr>
+                                    <td style="text-align: end;">
+                                        <strong>Fecha:</strong>
+                                        <t t-if="o.date_done">
+                                              <span style="font-weight: normal;" t-esc="o.date_done.strftime('%d/%m/%Y')"/>
+                                        </t>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+                <table border="1" style="width:100%; border-collapse: collapse; font-size: 13px;font-family: 'Arial';">
+                    <tr>
+                        <td style="width: 100%; vertical-align: top;">
+                            <!-- Primera columna -->
+                            <table border="1" style="width: 100%; ">
+                                <tr>
+                                    <td>
+                                        <strong>Cliente</strong>
+                                        <span style="font-weight: normal;" t-if="o.partner_id.name" t-field="o.partner_id.name"/>
+                                    </td>
+                                    <td style="padding-left: 30px">
+                                        <!-- <strong>Vendedor:</strong>
+                                        <span style="font-weight: normal;" t-esc="o.sale_id.user_id.name"/> -->
+                                    </td>
+                                    <!-- <td style="padding-left: 20px">
+                                        <strong>Doc:</strong>
+                                        <span style="font-weight: normal;" t-esc="''"/>
+                                    </td> -->
+                                    <!-- <td style="padding-left: 20px">
+                                        <strong>Ref:</strong>
+                                        <span style="font-weight: normal;" t-esc="'No existe'"/>
+                                    </td> -->
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span style="font-weight: normal;">
+                                            <t t-esc="o.partner_id.city" />
+                                            <strong> - </strong>
+                                            <t t-esc="o.partner_id.street" />
+                                        </span>
+                                    </td>
+                                    <td style="padding-left: 10px">
+                                        <strong>Plazo:</strong>
+                                        <span style="font-weight: normal;" t-esc="o.sale_id.payment_term_id.name"/>
+                                    </td>
+                                    <td style="padding-left: 10px">
+                                        <!-- <strong>Vence:</strong>
+                                        <span style="font-weight: normal;" t-esc="o.sale_id.validity_date.strftime('%d/%m/%Y')"/> -->
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+                <t t-out="0"/>
+            </div>
+        </template>
+    </data>
+</odoo>
