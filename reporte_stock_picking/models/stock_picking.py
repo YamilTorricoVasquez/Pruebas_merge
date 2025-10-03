@@ -22,8 +22,8 @@ class StockPicking(models.Model):
             if record.mes_secuencia:
                 record.secuencia = re.sub(r"-\d{2}-", "", record.mes_secuencia)
                 record.mes = re.search(r"-(\d{2})-", record.mes_secuencia).group(1)
-            else:
-                record.secuencia = ""
+            # else:
+            #     record.secuencia = ""
 
     def button_validate(self):
         res = super().button_validate()
